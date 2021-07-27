@@ -172,7 +172,7 @@ export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps
 						fontSize: 120,
 						textAlign: 'center',
 						width: '100%',
-						marginTop: 1700
+						marginTop: 1720
 					}}
 				>Link in bio !</h1>
 			</Sequence>
