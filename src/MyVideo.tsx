@@ -1,6 +1,6 @@
 import {CSSProperties} from "react";
 import './font.css';
-import {Img, Sequence} from "remotion";
+import {Img, interpolate, Sequence, useCurrentFrame} from "remotion";
 import durationInFrames from "./durationInFrames";
 import yt from './yt.png'
 
@@ -24,6 +24,43 @@ interface MyVideoProps {
 const cropSize = 60
 
 export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps) => {
+	const frame = useCurrentFrame()
+
+	const backgroundOpacity = Math.min(interpolate(
+		frame,
+		[0, 10],
+		[0, 1]
+	), 1)
+
+	const newNegativeMargin = Math.min(interpolate(
+		frame,
+		[0, 10],
+		[-500, 0]
+	), 0)
+
+	const youtubePositiveMargin = Math.max(interpolate(
+		frame,
+		[20, 30],
+		[500, 0]
+	), 0)
+
+	const videoTextOpacity = Math.min(interpolate(
+		frame,
+		[30, 40],
+		[0, 1]
+	), 1)
+
+	const thumbnailAndTitleOpacity = Math.min(interpolate(
+		frame,
+		[50, 80],
+		[0, 1]
+	), 1)
+
+	const bioLinkPositiveMargin = Math.max(interpolate(
+		frame,
+		[100, 105],
+		[300, 0]
+	), 0)
 
 	return (
 		<>
@@ -45,6 +82,7 @@ export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps
 				<Img
 					src={thumbnail}
 					style={{
+						opacity: backgroundOpacity,
 						filter: 'blur(50px)'
 					}}
 				/>
@@ -59,7 +97,7 @@ export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps
 						fontFamily: 'Montserrat',
 						color: '#FFFFFF',
 						fontSize: 120,
-						marginLeft: 140
+						marginLeft: 140 + newNegativeMargin
 					}}
 				>New</h1>
 			</Sequence>
@@ -74,7 +112,7 @@ export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps
 					height={484 / 3}
 					style={{
 						marginTop: 70,
-						marginLeft: 700
+						marginLeft: 700 + youtubePositiveMargin
 					}}
 				/>
 			</Sequence>
@@ -85,6 +123,7 @@ export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps
 			>
 				<h1
 					style={{
+						opacity: videoTextOpacity,
 						fontFamily: 'Montserrat',
 						color: '#FFFFFF',
 						fontSize: 250,
@@ -101,6 +140,7 @@ export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps
 			>
 				<div
 					style={{
+						opacity: thumbnailAndTitleOpacity,
 						marginTop: 750,
 						marginLeft: 'auto',
 						marginRight: 'auto',
@@ -125,6 +165,7 @@ export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps
 				name="Title"
 			>
 				<div style={{
+					opacity: thumbnailAndTitleOpacity,
 					fontFamily: 'Montserrat',
 					fontSize: 60,
 					lineHeight: 1.15,
@@ -172,7 +213,7 @@ export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps
 						fontSize: 120,
 						textAlign: 'center',
 						width: '100%',
-						marginTop: 1720
+						marginTop: 1720 + bioLinkPositiveMargin
 					}}
 				>Link in bio !</h1>
 			</Sequence>
