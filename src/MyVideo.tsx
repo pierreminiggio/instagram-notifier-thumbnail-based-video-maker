@@ -1,8 +1,9 @@
-import {CSSProperties} from "react";
+import {CSSProperties, useMemo} from "react";
 import './font.css';
-import {Img, interpolate, Sequence, useCurrentFrame} from "remotion";
+import {Audio, Img, interpolate, Sequence, useCurrentFrame} from "remotion";
 import durationInFrames from "./durationInFrames";
 import yt from './yt.png'
+import space from './space.mp3'
 
 const fontBackgroundColor = '#F57C00'
 const fontShadowWidthPx = '13px'
@@ -28,10 +29,41 @@ const newTextStartFrame = 0
 const youtubeStartFrame = 20
 const videoTextStartFrame = 30
 const thumbnailAndTitleStartFrame = 50
-const bioLinkStartFrame = 100
+const bioLinkStartFrame = 90
 
 export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps) => {
 	const frame = useCurrentFrame()
+
+	const textColor = useMemo<string>(() => {
+		if (frame < 300) {
+			return '#FFFFFF'
+		}
+
+		if (frame < 555) {
+			return 'rgb(255, ' + Math.max(interpolate(
+				frame,
+				[300, 555],
+				[255, 0]
+			), 0) + ', 255)'
+		}
+
+		return 'rgb(' + Math.max(interpolate(
+			frame,
+			[555, 810],
+			[255, 0]
+		), 0) + ', ' + Math.min(interpolate(
+			frame,
+			[555, 810],
+			[0, 255]
+		), 255) + ', 255)'
+
+	}, [frame])
+
+	const fontBackgroundAndShadowOpacity = Math.max(interpolate(
+		frame,
+		[200, 350],
+		[1, 0]
+	), 0)
 
 	const backgroundOpacity = Math.min(interpolate(
 		frame,
@@ -65,8 +97,14 @@ export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps
 
 	const bioLinkPositiveMargin = Math.max(interpolate(
 		frame,
-		[bioLinkStartFrame, 105],
+		[bioLinkStartFrame, 100],
 		[300, 0]
+	), 0)
+
+	const audioVolume = Math.max(interpolate(
+		frame,
+		[783, 898],
+		[1, 0]
 	), 0)
 
 	return (
@@ -102,7 +140,7 @@ export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps
 				<h1
 					style={{
 						fontFamily: 'Montserrat',
-						color: '#FFFFFF',
+						color: textColor,
 						fontSize: 120,
 						marginLeft: 140 + newTextNegativeMargin
 					}}
@@ -132,7 +170,7 @@ export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps
 					style={{
 						opacity: videoTextOpacity,
 						fontFamily: 'Montserrat',
-						color: '#FFFFFF',
+						color: textColor,
 						fontSize: 250,
 						textAlign: 'center',
 						width: '100%',
@@ -176,7 +214,7 @@ export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps
 					fontFamily: 'Montserrat',
 					fontSize: 60,
 					lineHeight: 1.15,
-					color: '#FFFFFF',
+					color: textColor,
 					textAlign: 'center',
 					paddingTop: '6px',
 					position: 'relative',
@@ -184,6 +222,7 @@ export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps
 				}}>
 					<div style={textDivStyle}>
 						<span style={{
+							opacity: fontBackgroundAndShadowOpacity,
 							backgroundColor: fontBackgroundColor,
 							color: 'transparent',
 							boxShadow:
@@ -199,8 +238,6 @@ export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps
 								+ fontBackgroundColor
 								+ ',-' + fontShadowWidthPx + ' ' + fontShadowHeightPx + ' 0 '
 								+ fontBackgroundColor
-							,
-							opacity: 0.7
 						}}>{title}</span>
 					</div>
 					<div style={textDivStyle}>
@@ -216,13 +253,20 @@ export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps
 				<h1
 					style={{
 						fontFamily: 'Montserrat',
-						color: '#FFFFFF',
+						color: textColor,
 						fontSize: 120,
 						textAlign: 'center',
 						width: '100%',
 						marginTop: 1720 + bioLinkPositiveMargin
 					}}
 				>Link in bio !</h1>
+			</Sequence>
+			<Sequence
+				from={0}
+				durationInFrames={durationInFrames}
+				name="Music"
+			>
+				<Audio src={space} volume={audioVolume} />
 			</Sequence>
 		</>
 	);
