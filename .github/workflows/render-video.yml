@@ -1,0 +1,29 @@
+on:
+  workflow_dispatch:
+    inputs:
+      thumbnail:
+        description: "Une URL vers la miniature de la vidéo"
+        required: true
+        default: "https://www.stored-youtube-video-thumbnails.ggio.fr/258"
+      title:
+        description: "Le titre de la vidéo"
+        required: true
+        default: "Elon Musk Advice to 20 years old self - Elon Musk Advice for Students"
+name: Render video
+jobs:
+  render:
+    name: Render video
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@main
+      - uses: actions/setup-node@main
+      - run: sudo apt update
+      - run: sudo apt install ffmpeg
+      - run: npm i
+      - run: npm run build -- --props="$WORKFLOW_INPUT"
+        env:
+          WORKFLOW_INPUT: ${{ toJson(github.event.inputs) }}
+      - uses: actions/upload-artifact@v2
+        with:
+          name: out.mp4
+          path: out.mp4
