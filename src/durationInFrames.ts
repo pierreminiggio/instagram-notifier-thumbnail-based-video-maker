@@ -1,3 +1,3 @@
-const durationInFrames = 1500
+const durationInFrames = 900
 
 export default durationInFrames

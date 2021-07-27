@@ -23,49 +23,56 @@ interface MyVideoProps {
 
 const cropSize = 60
 
+const thumbnailBackgroundStartFrame = 0
+const newTextStartFrame = 0
+const youtubeStartFrame = 20
+const videoTextStartFrame = 30
+const thumbnailAndTitleStartFrame = 50
+const bioLinkStartFrame = 100
+
 export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps) => {
 	const frame = useCurrentFrame()
 
 	const backgroundOpacity = Math.min(interpolate(
 		frame,
-		[0, 10],
+		[thumbnailBackgroundStartFrame, 10],
 		[0, 1]
 	), 1)
 
-	const newNegativeMargin = Math.min(interpolate(
+	const newTextNegativeMargin = Math.min(interpolate(
 		frame,
-		[0, 10],
+		[newTextStartFrame, 10],
 		[-500, 0]
 	), 0)
 
 	const youtubePositiveMargin = Math.max(interpolate(
 		frame,
-		[20, 30],
+		[youtubeStartFrame, 30],
 		[500, 0]
 	), 0)
 
 	const videoTextOpacity = Math.min(interpolate(
 		frame,
-		[30, 40],
+		[videoTextStartFrame, 40],
 		[0, 1]
 	), 1)
 
 	const thumbnailAndTitleOpacity = Math.min(interpolate(
 		frame,
-		[50, 80],
+		[thumbnailAndTitleStartFrame, 80],
 		[0, 1]
 	), 1)
 
 	const bioLinkPositiveMargin = Math.max(interpolate(
 		frame,
-		[100, 105],
+		[bioLinkStartFrame, 105],
 		[300, 0]
 	), 0)
 
 	return (
 		<>
 			<Sequence
-				from={0}
+				from={newTextStartFrame}
 				durationInFrames={durationInFrames}
 				name="Black background"
 			>
@@ -75,7 +82,7 @@ export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps
 				}} />
 			</Sequence>
 			<Sequence
-				from={0}
+				from={thumbnailBackgroundStartFrame}
 				durationInFrames={durationInFrames}
 				name="Blurred thumbnail"
 			>
@@ -97,12 +104,12 @@ export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps
 						fontFamily: 'Montserrat',
 						color: '#FFFFFF',
 						fontSize: 120,
-						marginLeft: 140 + newNegativeMargin
+						marginLeft: 140 + newTextNegativeMargin
 					}}
 				>New</h1>
 			</Sequence>
 			<Sequence
-				from={0}
+				from={youtubeStartFrame}
 				durationInFrames={durationInFrames}
 				name="Youtube"
 			>
@@ -117,7 +124,7 @@ export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps
 				/>
 			</Sequence>
 			<Sequence
-				from={0}
+				from={videoTextStartFrame}
 				durationInFrames={durationInFrames}
 				name="Video"
 			>
@@ -134,7 +141,7 @@ export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps
 				>Video !</h1>
 			</Sequence>
 			<Sequence
-				from={0}
+				from={thumbnailAndTitleStartFrame}
 				durationInFrames={durationInFrames}
 				name="thumbnail"
 			>
@@ -160,7 +167,7 @@ export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps
 				</div>
 			</Sequence>
 			<Sequence
-				from={0}
+				from={thumbnailAndTitleStartFrame}
 				durationInFrames={durationInFrames}
 				name="Title"
 			>
@@ -202,7 +209,7 @@ export const MyVideo: React.FC<MyVideoProps> = ({thumbnail, title}: MyVideoProps
 				</div>
 			</Sequence>
 			<Sequence
-				from={0}
+				from={bioLinkStartFrame}
 				durationInFrames={durationInFrames}
 				name="Link in bio"
 			>
